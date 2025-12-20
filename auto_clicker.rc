@@ -1,0 +1,27 @@
+// Version and icon resource file
+
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEOS 0x40004
+FILETYPE 0x1
+{
+BLOCK "StringFileInfo"
+{
+    BLOCK "040904B0"
+    {
+        VALUE "CompanyName", "AutoClicker Inc."
+        VALUE "FileDescription", "Windows Auto Clicker Application"
+        VALUE "FileVersion", "1.0.0.0"
+        VALUE "InternalName", "auto_clicker"
+        VALUE "LegalCopyright", "Copyright (C) 2025"
+        VALUE "OriginalFilename", "auto_clicker.exe"
+        VALUE "ProductName", "Auto Clicker"
+        VALUE "ProductVersion", "1.0.0.0"
+    }
+}
+BLOCK "VarFileInfo"
+{
+    VALUE "Translation", 0x409, 1200
+}
+}
