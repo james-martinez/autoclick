@@ -56,6 +56,31 @@ void AutoClickerThread() {
 // Function to start clicking
 void StartClicking(HWND hwnd) {
     if (!isClicking) {
+        // Read key selection
+        char keyText[10];
+        GetWindowText(keyCombo, keyText, sizeof(keyText));
+
+        keyToHoldVK = 0;
+        // Check if text is not "None" and not empty
+        // Simple case-insensitive check for "None"
+        bool isNone = false;
+        if (strlen(keyText) == 0) isNone = true;
+        else if (strlen(keyText) == 4) {
+            if ((keyText[0] == 'N' || keyText[0] == 'n') &&
+                (keyText[1] == 'o' || keyText[1] == 'o') &&
+                (keyText[2] == 'n' || keyText[2] == 'n') &&
+                (keyText[3] == 'e' || keyText[3] == 'e')) {
+                isNone = true;
+            }
+        }
+
+        if (!isNone && strlen(keyText) > 0) {
+             short vk = VkKeyScan(keyText[0]);
+             if (vk != -1) {
+                 keyToHoldVK = vk & 0xFF;
+             }
+        }
+
         isClicking = true;
         clickCount = 0;
 
@@ -174,15 +199,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         50, 310, 80, 20, hwnd, (HMENU)10, hInstance, NULL);
 
     keyCombo = CreateWindow("COMBOBOX", "",
-        CBS_DROPDOWNLIST | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE,
+        CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE,
         140, 310, 80, 200, hwnd, (HMENU)11, hInstance, NULL);
 
     // Add items to combo box
     SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"None");
-    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"W");
-    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"A");
-    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"S");
-    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"D");
+    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"w");
+    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"a");
+    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"s");
+    SendMessage(keyCombo, CB_ADDSTRING, 0, (LPARAM)"d");
 
     // Select "None" by default
     SendMessage(keyCombo, CB_SETCURSEL, 0, 0);
@@ -250,16 +275,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             }
             break;
         case 11: // Key combo box changed
-            if (HIWORD(wParam) == CBN_SELCHANGE) {
-                int index = SendMessage(keyCombo, CB_GETCURSEL, 0, 0);
-                switch (index) {
-                    case 0: keyToHoldVK = 0; break;
-                    case 1: keyToHoldVK = 'W'; break;
-                    case 2: keyToHoldVK = 'A'; break;
-                    case 3: keyToHoldVK = 'S'; break;
-                    case 4: keyToHoldVK = 'D'; break;
-                }
-            }
+            // Logic handled in StartClicking now
             break;
         }
         return 0;
