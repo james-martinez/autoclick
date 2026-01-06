@@ -140,23 +140,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     // Create controls
-    HWND startButton = CreateWindow("BUTTON", "Start Clicking", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+    CreateWindow("BUTTON", "Start Clicking", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
         50, 50, 120, 30, hwnd, (HMENU)1, hInstance, NULL);
 
-    HWND stopButton = CreateWindow("BUTTON", "Stop Clicking", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+    CreateWindow("BUTTON", "Stop Clicking", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
         50, 90, 120, 30, hwnd, (HMENU)2, hInstance, NULL);
 
-    HWND statusLabel = CreateWindow("STATIC", "Status: Stopped", WS_VISIBLE | WS_CHILD,
+    CreateWindow("STATIC", "Status: Stopped", WS_VISIBLE | WS_CHILD,
         50, 140, 200, 20, hwnd, (HMENU)3, hInstance, NULL);
 
-    HWND countLabel = CreateWindow("STATIC", "Clicks: 0", WS_VISIBLE | WS_CHILD,
+    CreateWindow("STATIC", "Clicks: 0", WS_VISIBLE | WS_CHILD,
         50, 170, 200, 20, hwnd, (HMENU)4, hInstance, NULL);
 
-    HWND infoLabel = CreateWindow("STATIC", "Rate: 100 clicks/second", WS_VISIBLE | WS_CHILD,
+    CreateWindow("STATIC", "Rate: 100 clicks/second", WS_VISIBLE | WS_CHILD,
         50, 200, 200, 20, hwnd, (HMENU)5, hInstance, NULL);
 
     // Rate input controls
-    HWND rateLabel = CreateWindow("STATIC", "Clicks/second:", WS_VISIBLE | WS_CHILD,
+    CreateWindow("STATIC", "Clicks/second:", WS_VISIBLE | WS_CHILD,
         50, 230, 100, 20, hwnd, (HMENU)6, hInstance, NULL);
 
     rateEdit = CreateWindow("EDIT", "100", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_NUMBER,
@@ -166,11 +166,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         250, 230, 80, 20, hwnd, (HMENU)8, hInstance, NULL);
 
     // Hotkey display
-    HWND hotkeyLabel = CreateWindow("STATIC", "Press ESC to toggle clicking (global hotkey)", WS_VISIBLE | WS_CHILD,
+    CreateWindow("STATIC", "Press ESC to toggle clicking (global hotkey)", WS_VISIBLE | WS_CHILD,
         50, 280, 350, 20, hwnd, (HMENU)9, hInstance, NULL);
 
     // Key hold controls
-    HWND keyLabel = CreateWindow("STATIC", "Hold Key:", WS_VISIBLE | WS_CHILD,
+    CreateWindow("STATIC", "Hold Key:", WS_VISIBLE | WS_CHILD,
         50, 310, 80, 20, hwnd, (HMENU)10, hInstance, NULL);
 
     keyCombo = CreateWindow("COMBOBOX", "",
@@ -237,14 +237,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             break;
 
         case 8: // Apply rate button clicked
-            char rateBuffer[10];
-            GetWindowText(rateEdit, rateBuffer, sizeof(rateBuffer));
+            {
+                char rateBuffer[10];
+                GetWindowText(rateEdit, rateBuffer, sizeof(rateBuffer));
 
-            // Parse and validate the rate
-            int newRate = atoi(rateBuffer);
-            if (newRate > 0 && newRate <= 1000) { // Reasonable limits
-                clicksPerSecond = newRate;
-                UpdateRateLabel(hwnd);
+                // Parse and validate the rate
+                int newRate = atoi(rateBuffer);
+                if (newRate > 0 && newRate <= 1000) { // Reasonable limits
+                    clicksPerSecond = newRate;
+                    UpdateRateLabel(hwnd);
+                }
             }
             break;
         case 11: // Key combo box changed
